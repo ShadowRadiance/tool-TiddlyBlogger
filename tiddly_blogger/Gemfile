@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gem 'activesupport'
+
+group :test do
+  gem 'mocha'
+end
+
+# Specify your gem's dependencies in tiddly_blogger.gemspec
+gemspec

@@ -7,6 +7,10 @@ TiddlyBlogger reads a blog on Google's Blogger platform and converts to a Tiddly
 
 To run this application, you need an API Key from https://console.developers.google.com/apis/credentials
 
+To run the tests for the tiddly_blogger gem, `cd tiddly_blogger`, then run either:
+- `BLOGGER_API_KEY=<your-api-key> SLOW_TESTS=yes bundle exec rake test`
+- `bundle exec rake test`
+
 ## Road Map
 
 ### Library and Command Line Interface
@@ -23,4 +27,3 @@ To run this application, you need an API Key from https://console.developers.goo
   - Option A: Email me or I'll wait for the response (Either way, operation must be asynchronous)
   - Option B: Zip of HTML+Images or Single Large HTML file with Images embedded
 - Handle bad URLs
-
