@@ -7,8 +7,10 @@ require 'active_support/core_ext/hash/indifferent_access'
 
 module TiddlyBlogger
   class BloggerGateway
-    BLOG_BY_URL      = 'https://www.googleapis.com/blogger/v3/blogs/byurl'
-    POSTS_BY_BLOG_ID = 'https://www.googleapis.com/blogger/v3/blogs/%<blog_id>/posts'
+    BASE_URL = 'https://www.googleapis.com/blogger/v3/blogs'
+    BLOG_BY_URL      = "#{BASE_URL}/byurl"
+    POSTS_BY_BLOG_ID = "#{BASE_URL}/%{blog_id}/posts"
+    COMMENTS_BY_POST_ID = "#{BASE_URL}/%{blog_id}/posts/%{post_id}/comments"
 
     def initialize(api_key)
       @cache = ActiveSupport::Cache::MemoryStore.new
@@ -36,35 +38,69 @@ module TiddlyBlogger
     end
 
     def get_posts_by_blog_id(blog_id, page_token = nil)
-      @cache.fetch("#{blog_id}/token/#{page_token}") do
-        rest_call(url_for_posts_list(blog_id, page_token))
-      end
+      rest_call(url_for_posts_list(blog_id, page_token))
     end
 
-    # rubocop:disable Metrics/MethodLength
-    def get_posts_by_blog_id_as_posts(blog_id)
-      @cache.fetch("#{blog_id}/") do
-        posts_params_items = []
-        posts_params_continue = get_posts_by_blog_id(blog_id)
-        while posts_params_continue[:items]&.length&.positive?
-          posts_params_items.concat posts_params_continue[:items]
+    def get_comments_by_blog_id_and_post_id(blog_id, post_id, page_token = nil)
+      rest_call(url_for_comments_list(blog_id, post_id, page_token))
+    end
 
-          next_page_token = posts_params_continue[:nextPageToken]
+    def get_all_comments_by_blog_id_and_post_id(blog_id, post_id)
+      items = []
+      next_page_token = nil
+      fetched = get_comments_by_blog_id_and_post_id(blog_id, post_id, next_page_token)
+      while fetched[:items]&.length&.positive?
+        items.concat(fetched[:items])
+        next_page_token = fetched[:nextPageToken]
+        break if next_page_token.nil?
 
-          break unless next_page_token
+        fetched = get_comments_by_blog_id_and_post_id(blog_id, post_id, next_page_token)
+      end
+      items
+    end
 
-          posts_params_continue = get_posts_by_blog_id(blog_id, next_page_token)
+    def get_all_posts_by_blog_id(blog_id)
+      items = []
+      next_page_token = nil
+      fetched = get_posts_by_blog_id(blog_id, next_page_token)
+      while fetched[:items]&.length&.positive?
+        fetched[:items].each do |item|
+          item[:replies][:items] = if item[:replies][:totalItems].to_i.positive?
+                                     get_all_comments_by_blog_id_and_post_id(blog_id, item[:id])
+                                   else
+                                     []
+                                   end
         end
+        items.concat(fetched[:items])
+        next_page_token = fetched[:nextPageToken]
+        break if next_page_token.nil?
 
-        Posts.new(posts_params_items)
+        fetched = get_posts_by_blog_id(blog_id, next_page_token)
       end
+      items
     end
-    # rubocop:enable Metrics/MethodLength
+
+    def get_posts_by_blog_id_as_posts(blog_id)
+      Posts.new(get_all_posts_by_blog_id(blog_id))
+    end
+
+    def url_for_comments_list(blog_id, post_id, page_token = nil)
+      params = {
+        key: @api_key,
+        fields: 'nextPageToken,items(id,published,updated,content,author(displayName,image/url))'
+      }
+      params[:pageToken] = page_token if page_token
+      append_params_to_uri(format(COMMENTS_BY_POST_ID, blog_id: blog_id, post_id: post_id), params)
+    end
 
     def url_for_posts_list(blog_id, page_token = nil)
-      params = { key: @api_key }
+      params = {
+        key: @api_key,
+        fetchImages: true,
+        fields: 'nextPageToken,items(id,blog/id,author(displayName,image/url),content,labels,images,published,updated,title,url,location,replies)'
+      }
       params[:pageToken] = page_token if page_token
-      append_params_to_uri(format(POSTS_BY_BLOG_ID, { blog_id: blog_id }), params)
+      append_params_to_uri(format(POSTS_BY_BLOG_ID, blog_id: blog_id), params)
 
       # 200 - found
       # 404 - not found

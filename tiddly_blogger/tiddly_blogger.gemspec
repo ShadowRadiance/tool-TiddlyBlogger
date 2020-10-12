@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/ShadowRadiance/TiddlyBlogger'
   spec.license       = 'MIT'
 
-  spec.required_ruby_version = '2.4'
+  spec.required_ruby_version = '>= 2.7'
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
   # delete this section to allow pushing this gem to any host.
@@ -27,6 +27,8 @@ Gem::Specification.new do |spec|
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
+
+  spec.add_dependency 'htmlentities'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'

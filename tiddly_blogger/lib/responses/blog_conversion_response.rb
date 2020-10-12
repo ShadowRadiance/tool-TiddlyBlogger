@@ -2,15 +2,12 @@
 
 module TiddlyBlogger
   class BlogConversionResponse
-    attr_reader :tiddlywiki_container
+    attr_reader :blog_conversion_request, :tiddlywiki_container, :blog
 
-    def initialize(blog_conversion_request, tiddlywiki_container)
+    def initialize(blog_conversion_request, tiddlywiki_container, blog: nil)
       @blog_conversion_request = blog_conversion_request
       @tiddlywiki_container = tiddlywiki_container
-    end
-
-    def blog_url
-      @blog_conversion_request.blog_url
+      @blog = blog
     end
   end
 end

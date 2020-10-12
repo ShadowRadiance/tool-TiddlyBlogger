@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'tiddly_blogger'
+
+blogger = TiddlyBlogger::BloggerGateway.new(ENV['BLOGGER_API_KEY'])
+interactor = TiddlyBlogger::ConvertBlog.new(blogger: blogger)
+request = TiddlyBlogger::BlogConversionRequest.new(blog_url: ENV['BLOG_URL'])
+response = interactor.execute(request)
+
+puts 'PARSED BLOG:'
+pp response.blog
+puts
+puts 'CONVERTED BLOG (Tiddlers):'
+pp response.tiddlywiki_container

@@ -18,7 +18,7 @@ module TiddlyBlogger
       @blogger.expects(:get_blog_by_url).returns(valid_blog).at_least_once
       @blogger.expects(:get_posts_by_blog_id).returns([]).at_least_once
 
-      @convert_blog.convert_blog blog_conversion_request
+      @convert_blog.execute blog_conversion_request
     end
 
     def valid_blog
