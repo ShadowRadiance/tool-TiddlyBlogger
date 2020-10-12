@@ -2,7 +2,7 @@
 
 module TiddlyBlogger
   class Author
-    attr_reader :author_id, :display_name, :image
+    attr_reader :display_name, :image
 
     def initialize(author_params)
       @display_name = author_params[:displayName]

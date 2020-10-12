@@ -2,6 +2,8 @@
 
 module TiddlyBlogger
   class ConvertBlog
+    TIME_FORMAT = '%Y%m%d%H%M%S%L'
+
     # @param [BloggerGateway] blogger
     # @param [Converter] converter
     def initialize(blogger:, converter: BlogConverter.new)
@@ -13,11 +15,13 @@ module TiddlyBlogger
     def execute(convert_blog_request)
       blog = blog_with_posts(convert_blog_request.blog_url)
 
-      tiddlywiki_container = @blog_converter.convert(blog)
+      temp_file = "data/blog-#{blog.id}-#{Time.now.utc.strftime(TIME_FORMAT)}.html"
+
+      @blog_converter.convert(blog, temp_file)
 
       BlogConversionResponse.new(
         convert_blog_request,
-        tiddlywiki_container,
+        file_name: temp_file,
         blog: blog
       )
     end
@@ -25,7 +29,7 @@ module TiddlyBlogger
     def blog_with_posts(blog_url)
       blog_hash = @blogger.get_blog_by_url(blog_url)
       blog = Blog.new(blog_hash)
-      blog.posts = @blogger.get_posts_by_blog_id_as_posts(blog.blog_id)
+      blog.posts = @blogger.get_posts_by_blog_id_as_posts(blog.id)
       blog
     end
   end

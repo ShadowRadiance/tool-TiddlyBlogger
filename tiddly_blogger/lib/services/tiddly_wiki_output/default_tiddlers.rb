@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require 'time'
-require 'htmlentities'
 require_relative 'base'
 
 module TiddlyWikiOutput
-  class TableOfContents < Base
+  class DefaultTiddlersTiddler < Base
     def initialize(blog)
       super()
       @blog = blog
@@ -15,12 +13,12 @@ module TiddlyWikiOutput
       {
         created: now.strftime(TIME_FORMAT),
         modified: now.strftime(TIME_FORMAT),
-        title: "Blog Posts from #{blog_name}"
+        title: '$:/DefaultTiddlers'
       }
     end
 
     def tiddler_content
-      @html_coder.encode('<<timeline format:"DD/MM/YYYY" subfilter:"!<storyTiddler>">>')
+      @html_coder.encode("[[Blog Posts from #{blog_name}]]")
     end
 
     private

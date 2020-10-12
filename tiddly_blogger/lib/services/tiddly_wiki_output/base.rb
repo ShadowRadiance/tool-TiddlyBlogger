@@ -21,20 +21,25 @@ module TiddlyWikiOutput
 
     private
 
-    def div(attrs)
+    def tag(tag_name, attrs = [])
       attr_string = attrs
                     .map { |k, v| %(#{k}="#{v}") }
                     .join(' ')
-
       <<~HTML
-        <div #{attr_string}>
+        <#{tag_name} #{attr_string}>
           #{yield}
-        </div>
+        </#{tag_name}>
       HTML
     end
 
-    def pre
-      "<pre>#{yield}</pre>"
+    %w[div pre blockquote cite].each do |tag_name|
+      define_method tag_name do |attrs = [], &block|
+        tag(tag_name, attrs, &block)
+      end
+    end
+
+    def para(attrs = [], &block)
+      tag('p', attrs, &block)
     end
   end
 end

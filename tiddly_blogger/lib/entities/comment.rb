@@ -2,6 +2,8 @@
 
 module TiddlyBlogger
   class Comment
+    attr_reader :id, :published, :updated, :content, :author
+
     def initialize(comment_params)
       @id = comment_params[:id]
       @published = comment_params[:published]

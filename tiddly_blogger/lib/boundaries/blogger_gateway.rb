@@ -32,7 +32,7 @@ module TiddlyBlogger
 
     def get_blog_by_url_as_blog_with_posts(blog_url)
       blog = get_blog_by_url_as_blog blog_url
-      posts = get_posts_by_blog_id_as_posts(blog.blog_id)
+      posts = get_posts_by_blog_id_as_posts(blog.id)
       blog.posts = posts
       blog
     end
@@ -59,6 +59,8 @@ module TiddlyBlogger
       items
     end
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def get_all_posts_by_blog_id(blog_id)
       items = []
       next_page_token = nil
@@ -79,6 +81,8 @@ module TiddlyBlogger
       end
       items
     end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     def get_posts_by_blog_id_as_posts(blog_id)
       Posts.new(get_all_posts_by_blog_id(blog_id))
@@ -93,6 +97,7 @@ module TiddlyBlogger
       append_params_to_uri(format(COMMENTS_BY_POST_ID, blog_id: blog_id, post_id: post_id), params)
     end
 
+    # rubocop:disable Layout/LineLength
     def url_for_posts_list(blog_id, page_token = nil)
       params = {
         key: @api_key,
@@ -101,107 +106,11 @@ module TiddlyBlogger
       }
       params[:pageToken] = page_token if page_token
       append_params_to_uri(format(POSTS_BY_BLOG_ID, blog_id: blog_id), params)
-
-      # 200 - found
-      # 404 - not found
-
-      # body is JSON either:
-      # {
-      #     "error": {
-      #         "errors": [ { "domain": "global", "reason": "notFound", "message": "Not Found" } ],
-      #         "code": 404,
-      #         "message": "Not Found"
-      #     }
-      # }
-      # or something like
-      # {
-      #     "kind": "blogger#postList",
-      #     "nextPageToken": string,
-      #     "items": [
-      #         {
-      #             "kind": "blogger#post",
-      #             "id": string,
-      #             "blog": { "id": string },
-      #             "published": datetime,
-      #             "updated": datetime,
-      #             "url": string,
-      #             "selfLink": string,
-      #             "title": string,
-      #             "titleLink": string,
-      #             "content": string,
-      #             "images": [
-      #                 { "url": string },
-      #                 ...
-      #             ],
-      #             "customMetaData": string,
-      #             "author": {
-      #                 "id": string,
-      #                 "displayName": string,
-      #                 "url": string,
-      #                 "image": {
-      #                     "url": string
-      #                 }
-      #             },
-      #             "replies": {
-      #                 "totalItems": long,
-      #                 "selfLink": string,
-      #                 "items": [
-      #                     comments Resource,
-      #                     ...
-      #                 ]
-      #             },
-      #             "labels": [ string, ... ],
-      #             "location": {
-      #                 "name": string,
-      #                 "lat": double,
-      #                 "lng": double,
-      #                 "span": string
-      #             },
-      #             "status": string
-      #         },
-      #         ...
-      #     ]
-      # }
     end
+    # rubocop:enable Layout/LineLength
 
     def url_for_blog_by_url(blog_url)
       append_params_to_uri(BLOG_BY_URL, { url: blog_url, key: @api_key })
-
-      # 200 - found
-      # 404 - not found
-
-      # body is JSON either:
-      # {
-      #     "error": {
-      #         "errors": [ { "domain": "global", "reason": "notFound", "message": "Not Found" } ],
-      #         "code": 404,
-      #         "message": "Not Found"
-      #     }
-      # }
-      # or something like
-      # {
-      #     "kind": "blogger#blog",
-      #     "id": "3835840683626140337",
-      #     "name": "ShadowRadiance",
-      #     "description": "",
-      #     "published": "2008-03-18T16:55:03-07:00",
-      #     "updated": "2014-10-04T20:01:34-07:00",
-      #     "url": "http://shadowradiance.blogspot.com/",
-      #     "selfLink": "https://www.googleapis.com/blogger/v3/blogs/3835840683626140337",
-      #     "posts": {
-      #         "totalItems": 1,
-      #         "selfLink": "https://www.googleapis.com/blogger/v3/blogs/3835840683626140337/posts"
-      #     },
-      #     "pages": {
-      #         "totalItems": 0,
-      #         "selfLink": "https://www.googleapis.com/blogger/v3/blogs/3835840683626140337/pages"
-      #     },
-      #     "locale": {
-      #         "language": "en",
-      #         "country": "",
-      #         "variant": ""
-      #     }
-      # }
     end
 
     def append_params_to_uri(base_uri, params)
@@ -213,7 +122,7 @@ module TiddlyBlogger
 
     def rest_call(url)
       response = Net::HTTP.get_response(URI.parse(url))
-      return unless response.is_a?(Net::HTTPSuccess)
+      raise response.inspect unless response.is_a?(Net::HTTPSuccess)
 
       resp_json = response.body
       JSON.parse(resp_json).with_indifferent_access

@@ -9,8 +9,4 @@ interactor = TiddlyBlogger::ConvertBlog.new(blogger: blogger)
 request = TiddlyBlogger::BlogConversionRequest.new(blog_url: ENV['BLOG_URL'])
 response = interactor.execute(request)
 
-puts 'PARSED BLOG:'
-pp response.blog
-puts
-puts 'CONVERTED BLOG (Tiddlers):'
-pp response.tiddlywiki_container
+puts "CONVERTED BLOG (File Name): #{response.file_name}"

@@ -7,10 +7,10 @@ require 'tiddly_blogger'
 
 module TiddlyBlogger
   class BloggerGatewayTest < MiniTest::Spec
-    # TEST_URL = 'http://barefoot-food.blogspot.ca/'
+    # TEST_URL = 'http://barefoot-food.blogspot.com/'
     TEST_URL = 'http://shadowradiance-lyrics.blogspot.com'
-    # TEST_ID = 7942290902909142963
-    TEST_ID = 1_521_384_701_098_992_626 # SR Lyrics
+    # TEST_ID = '7942290902909142963'
+    TEST_ID = '1521384701098992626' # SR Lyrics
     API_KEY = ENV['BLOGGER_API_KEY']
 
     def initialize(name)
