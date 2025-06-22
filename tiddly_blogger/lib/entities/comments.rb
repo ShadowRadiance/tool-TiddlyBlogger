@@ -17,6 +17,6 @@ module TiddlyBlogger
     def length
       @comments.length
     end
-    alias size length
+    alias_method :size, :length
   end
 end

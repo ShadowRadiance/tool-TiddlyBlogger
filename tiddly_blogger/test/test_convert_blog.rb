@@ -1,24 +1,23 @@
 # frozen_string_literal: true
 
-require 'minitest/autorun'
-require 'mocha/minitest'
-
-require 'tiddly_blogger'
+require "test_helper"
 
 module TiddlyBlogger
-  class ConvertBlogTest < MiniTest::Test
-    BLOG_URL = 'http://shadowradiance.blogger.com'
+  class ConvertBlogTest < Minitest::Test
+    BLOG_URL = "http://shadowradiance.blogger.com"
 
     def setup
-      @blogger      = mock
+      @blogger = Minitest::Mock.new
       @convert_blog = ConvertBlog.new blogger: @blogger
     end
 
     def test_convert_blog
-      @blogger.expects(:get_blog_by_url).returns(valid_blog).at_least_once
-      @blogger.expects(:get_posts_by_blog_id).returns([]).at_least_once
+      @blogger.expect(:get_blog_by_url, valid_blog_data, [String])
+      @blogger.expect(:get_posts_by_blog_id_as_posts, Posts.new([]), [String])
 
       @convert_blog.execute blog_conversion_request
+
+      @blogger.verify
     end
 
     def valid_blog
@@ -27,12 +26,12 @@ module TiddlyBlogger
 
     def valid_blog_data
       {
-        'id': '1521384701098992626',
-        'name': 'ShadowRadiance... Lyrics',
-        'description': '',
-        'url': 'http://shadowradiance-lyrics.blogspot.com/',
-        'posts': { 'totalItems': 6 },
-        'pages': { 'totalItems': 0 }
+        id: "1521384701098992626",
+        name: "ShadowRadiance... Lyrics",
+        description: "",
+        url: "http://shadowradiance-lyrics.blogspot.com/",
+        posts: {totalItems: 6},
+        pages: {totalItems: 0}
       }
     end
 

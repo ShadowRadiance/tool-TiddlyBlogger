@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'base'
+require_relative "base"
 
 module TiddlyWikiOutput
   class SiteTitle < Base
@@ -8,12 +8,12 @@ module TiddlyWikiOutput
       {
         created: now.strftime(TIME_FORMAT),
         modified: now.strftime(TIME_FORMAT),
-        title: '$:/SiteTitle'
+        title: "$:/SiteTitle"
       }
     end
 
     def tiddler_content
-      'Exported Google Blogger'
+      "Exported Google Blogger"
     end
 
     private

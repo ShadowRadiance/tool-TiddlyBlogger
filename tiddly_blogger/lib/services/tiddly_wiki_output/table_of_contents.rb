@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'time'
-require 'htmlentities'
-require_relative 'base'
+require "time"
+require "htmlentities"
+require_relative "base"
 
 module TiddlyWikiOutput
   class TableOfContents < Base

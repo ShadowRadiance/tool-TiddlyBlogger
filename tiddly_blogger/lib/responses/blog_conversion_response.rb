@@ -6,7 +6,7 @@ module TiddlyBlogger
 
     def initialize(blog_conversion_request, file_name: nil, blog: nil)
       @blog_conversion_request = blog_conversion_request
-      @file_name = file_name || 'STDOUT'
+      @file_name = file_name || "STDOUT"
       @blog = blog
     end
   end

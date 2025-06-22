@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'base'
+require_relative "base"
 
 module TiddlyWikiOutput
   class View < Base
@@ -8,7 +8,7 @@ module TiddlyWikiOutput
       {
         created: now.strftime(TIME_FORMAT),
         modified: now.strftime(TIME_FORMAT),
-        title: '$:/view'
+        title: "$:/view"
       }
     end
 
@@ -17,7 +17,7 @@ module TiddlyWikiOutput
     end
 
     def tiddler_content
-      ENV['VIEW'] || 'classic'
+      ENV["VIEW"] || "classic"
     end
 
     private

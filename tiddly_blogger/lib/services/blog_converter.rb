@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-require 'time'
-require 'htmlentities'
+require "time"
+require "htmlentities"
 
-require_relative 'tiddly_wiki_output/site_title'
-require_relative 'tiddly_wiki_output/site_subtitle'
-require_relative 'tiddly_wiki_output/default_tiddlers'
-require_relative 'tiddly_wiki_output/table_of_contents'
-require_relative 'tiddly_wiki_output/tiddler'
-require_relative 'tiddly_wiki_output/theme'
-require_relative 'tiddly_wiki_output/view'
+require_relative "tiddly_wiki_output/site_title"
+require_relative "tiddly_wiki_output/site_subtitle"
+require_relative "tiddly_wiki_output/default_tiddlers"
+require_relative "tiddly_wiki_output/table_of_contents"
+require_relative "tiddly_wiki_output/tiddler"
+require_relative "tiddly_wiki_output/theme"
+require_relative "tiddly_wiki_output/view"
 
 module TiddlyBlogger
   class BlogConverter
     def convert(blog, to_file = nil)
       @blog = blog
       if to_file != $stdout
-        File.open(to_file, 'w') do |o|
+        File.open(to_file, "w") do |o|
           write_output_to(o)
         end
       else
@@ -28,10 +28,10 @@ module TiddlyBlogger
 
     def write_output_to(output)
       skipping_until_end = false
-      File.foreach('data/empty-gb.html') do |line|
-        skipping_until_end = false if line =~ /<!-- END CUSTOM TIDDLERS -->/
+      File.foreach("data/empty-gb.html") do |line|
+        skipping_until_end = false if /<!-- END CUSTOM TIDDLERS -->/.match?(line)
         output.write(line) unless skipping_until_end
-        if line =~ /<!-- BEGIN CUSTOM TIDDLERS -->/
+        if /<!-- BEGIN CUSTOM TIDDLERS -->/.match?(line)
           output.write(custom_tiddlers.join("\n"))
           skipping_until_end = true
         end

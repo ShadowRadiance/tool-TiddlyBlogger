@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'time'
-require 'htmlentities'
+require "time"
+require "htmlentities"
 
 module TiddlyWikiOutput
   class Base
-    TIME_FORMAT = '%Y%m%d%H%M%S%L'
+    TIME_FORMAT = "%Y%m%d%H%M%S%L"
 
     def initialize
       @html_coder = HTMLEntities.new
@@ -23,8 +23,8 @@ module TiddlyWikiOutput
 
     def tag(tag_name, attrs = [])
       attr_string = attrs
-                    .map { |k, v| %(#{k}="#{v}") }
-                    .join(' ')
+        .map { |k, v| %(#{k}="#{v}") }
+        .join(" ")
       <<~HTML
         <#{tag_name} #{attr_string}>
           #{yield}
@@ -39,7 +39,7 @@ module TiddlyWikiOutput
     end
 
     def para(attrs = [], &block)
-      tag('p', attrs, &block)
+      tag("p", attrs, &block)
     end
   end
 end

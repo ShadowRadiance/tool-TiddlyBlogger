@@ -6,7 +6,7 @@ module TiddlyBlogger
 
     def initialize(author_params)
       @display_name = author_params[:displayName]
-      @image        = Image.new(author_params[:image])
+      @image = Image.new(author_params[:image])
     end
   end
 end

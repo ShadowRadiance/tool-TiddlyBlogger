@@ -1,24 +1,22 @@
 # frozen_string_literal: true
 
-require 'minitest/autorun'
-require 'mocha/minitest'
-
-require 'tiddly_blogger'
+require "test_helper"
 
 module TiddlyBlogger
-  class BloggerGatewayTest < MiniTest::Spec
+  class BloggerGatewayTest < Minitest::Spec
     # TEST_URL = 'http://barefoot-food.blogspot.com/'
-    TEST_URL = 'http://shadowradiance-lyrics.blogspot.com'
+    TEST_URL = "http://shadowradiance-lyrics.blogspot.com"
     # TEST_ID = '7942290902909142963'
-    TEST_ID = '1521384701098992626' # SR Lyrics
-    API_KEY = ENV['BLOGGER_API_KEY']
+    TEST_ID = "1521384701098992626" # SR Lyrics
+    API_KEY = ENV["BLOGGER_API_KEY"]
 
     def initialize(name)
       super
       @blogger_gateway = BloggerGateway.new(API_KEY)
     end
 
-    def setup; end
+    def setup
+    end
 
     def test_can_connect
       slow_test
@@ -74,8 +72,8 @@ module TiddlyBlogger
     private
 
     def slow_test
-      msg = 'This is a slow test'
-      skip msg unless ENV['SLOW_TESTS']
+      msg = "This is a slow test"
+      skip msg unless ENV["SLOW_TESTS"]
     end
   end
 end

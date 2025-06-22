@@ -14,6 +14,6 @@ module TiddlyBlogger
     def length
       @errors.length
     end
-    alias size length
+    alias_method :size, :length
   end
 end

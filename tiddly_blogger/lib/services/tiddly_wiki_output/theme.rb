@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'base'
+require_relative "base"
 
 module TiddlyWikiOutput
   class Theme < Base
@@ -8,12 +8,12 @@ module TiddlyWikiOutput
       {
         created: now.strftime(TIME_FORMAT),
         modified: now.strftime(TIME_FORMAT),
-        title: '$:/theme'
+        title: "$:/theme"
       }
     end
 
     def tiddler_content
-      '$:/themes/tiddlywiki/snowwhite'
+      "$:/themes/tiddlywiki/snowwhite"
     end
 
     private

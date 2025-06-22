@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'base'
+require_relative "base"
 
 module TiddlyWikiOutput
   class DefaultTiddlersTiddler < Base
@@ -13,7 +13,7 @@ module TiddlyWikiOutput
       {
         created: now.strftime(TIME_FORMAT),
         modified: now.strftime(TIME_FORMAT),
-        title: '$:/DefaultTiddlers'
+        title: "$:/DefaultTiddlers"
       }
     end
 

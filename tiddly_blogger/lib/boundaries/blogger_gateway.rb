@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'net/http'
-require 'json'
-require 'active_support/cache'
-require 'active_support/core_ext/hash/indifferent_access'
+require "net/http"
+require "json"
+require "active_support/cache"
+require "active_support/core_ext/hash/indifferent_access"
 
 module TiddlyBlogger
   class BloggerGateway
-    BASE_URL = 'https://www.googleapis.com/blogger/v3/blogs'
-    BLOG_BY_URL      = "#{BASE_URL}/byurl"
+    BASE_URL = "https://www.googleapis.com/blogger/v3/blogs"
+    BLOG_BY_URL = "#{BASE_URL}/byurl"
     POSTS_BY_BLOG_ID = "#{BASE_URL}/%{blog_id}/posts"
     COMMENTS_BY_POST_ID = "#{BASE_URL}/%{blog_id}/posts/%{post_id}/comments"
 
@@ -68,10 +68,10 @@ module TiddlyBlogger
       while fetched[:items]&.length&.positive?
         fetched[:items].each do |item|
           item[:replies][:items] = if item[:replies][:totalItems].to_i.positive?
-                                     get_all_comments_by_blog_id_and_post_id(blog_id, item[:id])
-                                   else
-                                     []
-                                   end
+            get_all_comments_by_blog_id_and_post_id(blog_id, item[:id])
+          else
+            []
+          end
         end
         items.concat(fetched[:items])
         next_page_token = fetched[:nextPageToken]
@@ -91,7 +91,7 @@ module TiddlyBlogger
     def url_for_comments_list(blog_id, post_id, page_token = nil)
       params = {
         key: @api_key,
-        fields: 'nextPageToken,items(id,published,updated,content,author(displayName,image/url))'
+        fields: "nextPageToken,items(id,published,updated,content,author(displayName,image/url))"
       }
       params[:pageToken] = page_token if page_token
       append_params_to_uri(format(COMMENTS_BY_POST_ID, blog_id: blog_id, post_id: post_id), params)
@@ -102,7 +102,7 @@ module TiddlyBlogger
       params = {
         key: @api_key,
         fetchImages: true,
-        fields: 'nextPageToken,items(id,blog/id,author(displayName,image/url),content,labels,images,published,updated,title,url,location,replies)'
+        fields: "nextPageToken,items(id,blog/id,author(displayName,image/url),content,labels,images,published,updated,title,url,location,replies)"
       }
       params[:pageToken] = page_token if page_token
       append_params_to_uri(format(POSTS_BY_BLOG_ID, blog_id: blog_id), params)
@@ -110,12 +110,12 @@ module TiddlyBlogger
     # rubocop:enable Layout/LineLength
 
     def url_for_blog_by_url(blog_url)
-      append_params_to_uri(BLOG_BY_URL, { url: blog_url, key: @api_key })
+      append_params_to_uri(BLOG_BY_URL, {url: blog_url, key: @api_key})
     end
 
     def append_params_to_uri(base_uri, params)
       uri = URI.parse(base_uri)
-      new_query_hash = Hash[URI.decode_www_form(uri.query || '')].merge(params)
+      new_query_hash = URI.decode_www_form(uri.query || "").to_h.merge(params)
       uri.query = URI.encode_www_form(new_query_hash)
       uri.to_s
     end

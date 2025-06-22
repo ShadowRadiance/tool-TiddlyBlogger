@@ -2,7 +2,7 @@
 
 module TiddlyBlogger
   class ConvertBlog
-    TIME_FORMAT = '%Y%m%d%H%M%S%L'
+    TIME_FORMAT = "%Y%m%d%H%M%S%L"
 
     # @param [BloggerGateway] blogger
     # @param [Converter] converter

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'time'
-require 'htmlentities'
-require_relative 'base'
+require "time"
+require "htmlentities"
+require_relative "base"
 
 module TiddlyWikiOutput
   class TiddlerHtml < Base
@@ -40,7 +40,7 @@ module TiddlyWikiOutput
     end
 
     def tiddlerize_comment(comment)
-      blockquote(class: 'tc-quote tc-big-quote') do
+      blockquote(class: "tc-quote tc-big-quote") do
         [
           para { comment.content },
           cite { "#{comment.author.display_name} (#{Time.xmlschema(comment.published)})" }
@@ -49,11 +49,11 @@ module TiddlyWikiOutput
     end
 
     def author
-      @post.author&.display_name || 'Anonymous'
+      @post.author&.display_name || "Anonymous"
     end
 
     def type
-      'text/html'
+      "text/html"
     end
 
     def created
@@ -68,7 +68,7 @@ module TiddlyWikiOutput
       @html_coder.encode(
         @post.labels
           .map { |label| "[[#{label}]]" }
-          .join(' ')
+          .join(" ")
           .to_s
       )
     end

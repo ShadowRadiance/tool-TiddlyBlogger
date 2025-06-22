@@ -7,8 +7,8 @@ module TiddlyBlogger
     def initialize(blog_params)
       @id = blog_params[:id]
       @name = blog_params[:name]
-      @description = blog_params.fetch(:description, '')
-      @url = blog_params.fetch(:url, '')
+      @description = blog_params.fetch(:description, "")
+      @url = blog_params.fetch(:url, "")
       @posts_count = blog_params[:posts][:totalItems]
       @pages_count = blog_params[:pages][:totalItems]
 
